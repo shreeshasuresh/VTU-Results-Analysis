@@ -1,5 +1,5 @@
 # VTU-Results-Analysis
-This is a script to extract the results of any VTU college / course to help you analyse the data. 
+This is a script to extract the results of any VTU college / branch to help you analyse the data. 
 The results are read from the [VTU results webpage](http://www.results.vtu.ac.in/vitavi.php) and written to a file _data.txt_.
 ___
 ## Steps to run this script:
@@ -18,10 +18,10 @@ Each subject consists of three columns. First column is the external marks, seco
 |    ....    |    ....   |    ....   |    ....   |    ....   |    ....   |    ....   |    ....   |    ....   |  .... |
 
 ___
-## Bugs to tackle:
+## Bugs to tackle / Enhancements:
 * The marks of uncleared subjects (Backlogs) will be written to the file in place of Total.
 * Extract the marks of USNs without hard-coding the initial digit in USN
-* Allow extraction of results for various colleges without hard-coding
+* Allow extraction of results for various colleges / branches without hard-coding
 
 ___
 Use the data written in _data.txt_ file to do any analysis on it! For suggestions or to report bugs contact me at shreesha.suresh@gmail.com
