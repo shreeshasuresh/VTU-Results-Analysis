@@ -20,6 +20,7 @@ Each subject consists of three columns. First column is the external marks, seco
 ___
 ## Bugs to tackle / Enhancements:
 * The marks of uncleared subjects (Backlogs) will be written to the file in place of Total.
+* Extract the marks of USNs without hard-coding the initial digit in USN
 * Allow extraction of results for various colleges / branches without hard-coding
 
 ___

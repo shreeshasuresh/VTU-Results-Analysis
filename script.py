@@ -7,28 +7,44 @@
 
 import requests
 
-for i in range(10, 100):
-	usn = "1PE13IS0"+str(i)
+for i in range(1, 130):
+	# Append the USN with suitable three digits at the end
+	if int(i/10) == 0 and int(i/100) == 0:
+		usn = "1PE13IS00"+str(i)
+	elif int(i/10) != 0 and int(i/100) == 0:
+		usn = "1PE13IS0"+str(i)
+	else:
+		usn = "1PE13IS"+str(i)
+
 	data_file = open('data', 'a')
-	data_file.write(usn)
-	data_file.write(" ")
+	# Send USN and SUBMIT as POST Request
 	payload = {'rid':usn, 'submit':'SUBMIT'}
 	response = requests.post("http://results.vtu.ac.in/vitavi.php", data=payload)
+	# Extract the line which contains the results from the HTML response
 	for line in response.iter_lines():
 		if line[0:3] == '<B>':
 			split_words = line.split(">")
-			
+		else:
+			continue
+		
 	count = 0
-	try:
-		for i in split_words:
-			count += 1
+	if len(split_words) != 0:
+		# Write the USN to the file if HTML line with results is not empty
+		data_file.write(usn)
+		data_file.write(" ")
+		for tags in split_words:
+			# Extract the marks ignoring the HTML tags
 			word = split_words[count].split("<")[0]
 			if count % 2 == 0 and word != '' and len(word) <= 3:
 				data_file.write(word)
 				data_file.write(" ")
-	except:
+			count += 1
+
+		data_file.write(split_words[-6].split(" &")[0].split(" ")[1])
+		data_file.write("\n")
+		data_file = open('data', 'r')
+		data_file.read()
+		# Clear the previous list elements
+		split_words = []
+	else:
 		pass
-	data_file.write(split_words[-6].split(" &")[0].split(" ")[1])
-	data_file.write("\n")
-	data_file = open('data', 'r')
-	data_file.read()
