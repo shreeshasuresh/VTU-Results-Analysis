@@ -20,7 +20,7 @@ Each subject consists of three columns. First column is the external marks, seco
 ___
 ## Bugs to tackle / Enhancements:
 * The marks of uncleared subjects (Backlogs) will be written to the file in place of Total.
-* Allow extraction of results for various colleges / branches without hard-coding
+* Provide subject-wise analysis.
 
 ___
 Use the data written in _data.txt_ file to do any analysis on it! For suggestions or to report bugs contact me at shreesha.suresh@gmail.com
