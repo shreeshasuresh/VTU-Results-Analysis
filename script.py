@@ -9,12 +9,7 @@ import requests
 
 for i in range(1, 130):
 	# Append the USN with suitable three digits at the end
-	if int(i/10) == 0 and int(i/100) == 0:
-		usn = "1PE13IS00"+str(i)
-	elif int(i/10) != 0 and int(i/100) == 0:
-		usn = "1PE13IS0"+str(i)
-	else:
-		usn = "1PE13IS"+str(i)
+	usn = "1PE13IS"+str(i).zfill(3)
 
 	data_file = open('data', 'a')
 	# Send USN and SUBMIT as POST Request
