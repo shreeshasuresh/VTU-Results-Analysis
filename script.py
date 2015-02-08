@@ -1,15 +1,17 @@
-######################################################################################
-#                                                                                    #
-#                     Developed by Shreesha S                                        #
-# For enhancements suggestions, bugs or hugs contact me at shreesha.suresh@gmail.com #
-#                                                                                    #
-######################################################################################
+#######################################################################################
+#                                                                                     #
+#                     Developed by Shreesha S                                         #
+# For enhancements, suggestions, bugs or hugs contact me at shreesha.suresh@gmail.com #
+#                                                                                     #
+#######################################################################################
 
 import requests, json
+from bs4 import BeautifulSoup
 
 total = []
 print "Enter first 7 character of USN: region code + college code + year + college code"
-usn_code = raw_input("example: 1PE13IS >")
+usn_code = raw_input("example: 1PE13IS > ")
+print "Wait till we crunch the numbers and get the data for you..."
 
 try:
 	for i in range(1, 200):
@@ -23,32 +25,46 @@ try:
 		# Extract the line which contains the results from the HTML response
 		for line in response.iter_lines():
 			if line[0:3] == '<B>':
-				split_words = line.split(">")
+				soup = BeautifulSoup(line)
 			else:
 				continue
-		
-		count = 0
-		if len(split_words) != 0:
-			# Write the USN to the file if HTML line with results is not empty
+
+		# If USN is valid and the marks-data is properly returned
+		if soup != None:
+			# We want to ignore the initial 10 strings (count) as it is non-sense!
+			count = -10
+			# Get the string containg name and usn
+			name_usn = soup.b.string.strip()
+			name = name_usn.split("(")[0]
+			# Write to file name and usn
 			data_file.write(usn)
 			data_file.write(" ")
-			for tags in split_words:
-				# Extract the marks ignoring the HTML tags
-				word = split_words[count].split("<")[0]
-				if count % 2 == 0 and word != '' and len(word) <= 3:
-					data_file.write(word)
-					data_file.write(" ")
-				count += 1
+			data_file.write(name)
 
-			total_marks = split_words[-6].split(" &")[0].split(" ")[1]
-			if len(total_marks) == 3:
+			# Get the strings containing 
+			text = soup.find_all('td')
+			for each in text:
+				count += 1
+				# Go straight to the first subject ignoring the rest strings
+				if count >= 0 and each.string != "Semester:" and each.string != None:
+					if count % 5 == 0 or each.string.strip() == 'Total Marks:':
+						data_file.write("\n\t")
+					data_file.write(each.string.strip())
+					data_file.write(" ")
+				# Break from this loop (don't print) if the student has written subjects of Backlog.
+				elif each.string == "Semester:" and count > 9:
+					break
+
+			""" Get the Total marks and print if it is more than 300...
+			... and anything below that means that the total is of ...
+			... the backlog subjects which is not what we want """
+			total_marks = text[-1].string.strip()
+			if total_marks > 300:
 				total.append(total_marks)
-			data_file.write(total_marks)
+
 			data_file.write("\n")
-			data_file = open('data', 'r')
-			data_file.read()
-			# Clear the previous list elements
-			split_words = []
+			soup = None
+			
 		else:
 			pass
 
@@ -83,4 +99,4 @@ try:
 	print json.dumps(mark_slab, indent=4)
 
 except:
-	print "Please enter a valid USN query."
+	print "Please enter a valid USN query."""
