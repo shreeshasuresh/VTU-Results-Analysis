@@ -8,8 +8,11 @@
 import requests, json
 from bs4 import BeautifulSoup
 
+import plotly.plotly as py
+from plotly.graph_objs import *
+
 total = []
-print "Enter first 7 character of USN: region code + college code + year + college code"
+print "Enter first 7 character of USN: Region Code + College Code + Year + Branch Code"
 usn_code = raw_input("example: 1PE13IS > ")
 print "Wait till we crunch the numbers and get the data for you..."
 
@@ -59,14 +62,23 @@ try:
 			... and anything below that means that the total is of ...
 			... the backlog subjects which is not what we want """
 			total_marks = text[-1].string.strip()
-			if total_marks > 300:
+			if int(total_marks) > 300:
 				total.append(total_marks)
 
 			data_file.write("\n")
 			soup = None
-			
+
 		else:
 			pass
+
+	total_trace = Scatter(
+				x = range(1, len(total)+1),
+				y = total
+			)
+	total_data = Data([total_trace])
+
+	unique_url = py.plot(total_data, filename = 'PESIT-BSC-3rd-Sem-ISE-Total')
+
 
 	mark_slab = { 'percent<50%': 0,
 				'50%<=percent<60%': 0,
@@ -99,4 +111,4 @@ try:
 	print json.dumps(mark_slab, indent=4)
 
 except:
-	print "Please enter a valid USN query."""
+	print "Please enter a valid USN query."
