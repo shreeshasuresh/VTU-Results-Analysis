@@ -75,8 +75,10 @@ try:
 				x = range(1, len(total)+1),
 				y = total
 			)
+	# If porting to Python 3.x, then use `list(range(1, len(total)+1))`
 	total_data = Data([total_trace])
 
+	# For other College / Semester / Branch, change the graph title name (filename)
 	unique_url = py.plot(total_data, filename = 'PESIT-BSC-3rd-Sem-ISE-Total')
 
 
