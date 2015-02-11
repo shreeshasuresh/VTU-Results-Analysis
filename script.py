@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 
 import plotly.plotly as py
 from plotly.graph_objs import *
+import collections
 
 total = []
 print "Enter first 5 character of USN: Region Code + College Code + Year"
@@ -86,11 +87,38 @@ try:
 					elif each.string == "Semester:" and count > 9:
 						break
 
+				total_marks = text[-1].string.strip()
+				if int(total_marks) > 300:
+					total.append(total_marks)
 				data_file.write("\n")
 				soup = None
-
+				
 			else:
 				pass
+				
+		total.sort()
+		counter = collections.Counter(total)
+		freq = counter.values()
+		value = counter.keys()
+		
+		frequency_trace = Histogram(
+							x = value,
+							y = freq,
+							name=branch_code
+						)
+		layout = Layout(
+					title='PESIT-BSC 3rd Sem Frequency of Total Marks',
+    				xaxis=XAxis(
+        				title='Total Marks',
+        			),
+        			yaxis = YAxis(
+       			 		title='No. of Students with same marks',
+      		  		)
+        		)
+		frequency_data = Data([frequency_trace])
+		fig = Figure(data=frequency_data, layout=layout)
+
+		unique_url = py.plot(fig, filename = 'PESIT-BSC-3rd-Sem-Marks-Frequency', world_readable=False) 
 
 	average_ise = []
 	average_cse = []
@@ -123,6 +151,7 @@ try:
 				name='MECH'
 			)
 	layout = Layout(
+			title='PESIT-BSC 3rd Semester Average Marks',
     		xaxis=XAxis(
         		title='Subject Codes',
         		),
@@ -133,7 +162,7 @@ try:
 	total_data = Data([total_trace_cse, total_trace_ise, total_trace_ece, total_trace_me])
 	fig = Figure(data=total_data, layout=layout)
 
-	unique_url = py.plot(fig, filename = 'PESIT-BSC-3rd-Sem-Average-Marks')
+	unique_url = py.plot(fig, filename = 'PESIT-BSC-3rd-Sem-Average-Marks', world_readable=False)
 	
 except:
 	print "Please enter a valid USN query."
