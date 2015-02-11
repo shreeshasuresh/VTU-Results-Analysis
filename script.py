@@ -12,7 +12,6 @@ import plotly.plotly as py
 from plotly.graph_objs import *
 import collections
 
-total = []
 print "Enter first 5 character of USN: Region Code + College Code + Year"
 usn_code = raw_input("example: 1PE13 > ")
 # List of branches
@@ -27,6 +26,7 @@ subject_total_me = [[],[],[],[],[],[],[],[]]
 
 try:
 	for branch_code in branch:
+		total = []
 		for i in range(1, 200):
 			# Append the USN with suitable three digits at the end
 			usn = usn_code + branch_code + str(i).zfill(3)
@@ -107,7 +107,7 @@ try:
 							name=branch_code
 						)
 		layout = Layout(
-					title='PESIT-BSC 3rd Sem Frequency of Total Marks',
+					title='PESIT-BSC 3rd Sem '+branch_code+' Frequency of Total Marks',
     				xaxis=XAxis(
         				title='Total Marks',
         			),
@@ -118,7 +118,7 @@ try:
 		frequency_data = Data([frequency_trace])
 		fig = Figure(data=frequency_data, layout=layout)
 
-		unique_url = py.plot(fig, filename = 'PESIT-BSC-3rd-Sem-Marks-Frequency', world_readable=False) 
+		unique_url = py.plot(fig, filename = 'PESIT-BSC-3rd-Sem-Marks-Frequency') 
 
 	average_ise = []
 	average_cse = []
@@ -162,7 +162,7 @@ try:
 	total_data = Data([total_trace_cse, total_trace_ise, total_trace_ece, total_trace_me])
 	fig = Figure(data=total_data, layout=layout)
 
-	unique_url = py.plot(fig, filename = 'PESIT-BSC-3rd-Sem-Average-Marks', world_readable=False)
+	unique_url = py.plot(fig, filename = 'PESIT-BSC-3rd-Sem-Average-Marks')
 	
 except:
 	print "Please enter a valid USN query."
