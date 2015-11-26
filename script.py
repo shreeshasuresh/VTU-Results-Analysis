@@ -165,12 +165,12 @@ try:
 		layout = Layout(
 				title=college_name + ' 3rd Semester Average Marks',
 				xaxis=XAxis(
-		    		title='Subject Codes',
-		    		),
-		    	yaxis = YAxis(
-		    		title='Average Marks',
-		    		)
-		    	)
+					title='Subject Codes',
+					),
+				yaxis = YAxis(
+					title='Average Marks',
+					)
+				)
 		total_data = Data([total_trace_cse, total_trace_ise, total_trace_ece, total_trace_me])
 		fig = Figure(data=total_data, layout=layout)
 
