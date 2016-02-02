@@ -7,6 +7,23 @@
 		background: rgba(165,120,25,0.12); /* #f3f6fa */
 	}
 
+	.page-header {
+		color: #e60000;
+		font-family: verdana;
+	}
+	.description {
+		color:#000;
+		font-family: verdana;
+	}
+	
+	.hcolor {
+		color:#000;
+	}
+	credits {
+		font-size:32;
+		font-family: 'Lato', sans-serif;
+	}
+
 	body.is-loading * {
 		-moz-animation: none !important;
 		-webkit-animation: none !important;
