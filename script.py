@@ -122,6 +122,7 @@ for college_code in college:
 							name=branch_code
 						)
 		layout = Layout(
+<<<<<<< HEAD
 					title=college_name+' 5th Sem '+branch_code+' Frequency of Total Marks',
 					xaxis=XAxis(
 	    				title='Total Marks',
@@ -181,6 +182,23 @@ for college_code in college:
 	end1=datetime.now()
 	print end1 - start1
 	
+=======
+				title=college_name + ' 3rd Semester Average Marks',
+				xaxis=XAxis(
+					title='Subject Codes',
+					),
+				yaxis = YAxis(
+					title='Average Marks',
+					)
+				)
+		total_data = Data([total_trace_cse, total_trace_ise, total_trace_ece, total_trace_me])
+		fig = Figure(data=total_data, layout=layout)
+
+		unique_url = py.plot(fig, filename = college_name + ' 3rd Semester Average Marks')
+		end1=datetime.now()
+		print end1 - start1
+
+>>>>>>> c7cc6d5ee86cfa8c5dccde639b99a54cc5d8afc4
 end2=datetime.now()
 print end2 - start2
 
