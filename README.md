@@ -1,6 +1,8 @@
 # VTU-Results-Analysis
 This is a script to extract the results of any VTU college / branch to help you analyse the data. 
 The results are read from the [VTU results webpage](http://www.results.vtu.ac.in/vitavi.php) and written to a file _data.txt_.
+
+The link: [Click here](http://shreesha-s.github.io/VTU-Results-Analysis/)
 ___
 ## Steps to run this script:
 1. Install Python 2.7 if not installed already
