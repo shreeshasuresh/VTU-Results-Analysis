@@ -20,7 +20,7 @@
 		color:#000;
 	}
 	credits {
-		font-size:42;
+		font-size:32;
 		font-family: 'Lato', sans-serif;
 	}
 
