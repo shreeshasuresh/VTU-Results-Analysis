@@ -11,11 +11,12 @@ from bs4 import BeautifulSoup
 import plotly.plotly as py
 from plotly.graph_objs import *
 
-total = []
-print "Enter first 5 character of USN: Region Code + College Code + Year"
-usn_code = raw_input("example: 1PE13 > ")
-# List of branches
+import collections
+
+from datetime import datetime
+
 branch = ['CS', 'IS', 'EC', 'ME']
+college = ['BI', 'RN', 'DS', 'PE']
 print "Wait till we crunch the numbers and get the data for you..."
 
 # Create empty 2-D lists to store the marks of various students for 8 subjects
@@ -24,22 +25,37 @@ subject_total_cse = [[],[],[],[],[],[],[],[]]
 subject_total_ece = [[],[],[],[],[],[],[],[]]
 subject_total_me = [[],[],[],[],[],[],[],[]]
 
-try:
+#try:
+start2=datetime.now()
+for college_code in college:
+	start1=datetime.now()
+	if college_code == 'PE':
+		college_name = 'PESIT-BSC'
+	elif college_code == 'BI':
+		college_name = 'BIT, Bangalore'
+	elif college_code == 'RN':
+		college_name = 'RNSIT'
+	elif college_code == 'DS':
+		college_name = 'DSCE, Bangalore'
 	for branch_code in branch:
+		total = []
 		for i in range(1, 200):
 			# Append the USN with suitable three digits at the end
-			usn = usn_code + branch_code + str(i).zfill(3)
+			usn = '1' + college_code + '13' + branch_code + str(i).zfill(3)
 
 			data_file = open('data', 'a')
-			# Send USN and SUBMIT as POST Request
+      # Send USN and SUBMIT as POST Request
 			payload = {'rid':usn, 'submit':'SUBMIT'}
-			response = requests.post("http://results.vtu.ac.in/vitavi.php", data=payload)
-			# Extract the line which contains the results from the HTML response
-			for line in response.iter_lines():
-				if line[0:3] == '<B>':
-					soup = BeautifulSoup(line)
-				else:
-					continue
+			try:
+				response = requests.post("http://results.vtu.ac.in/vitavi.php", data=payload)
+				# Extract the line which contains the results from the HTML response
+				for line in response.iter_lines():
+					if line[0:3] == '<B>':
+						soup = BeautifulSoup(line)
+					else:
+						continue
+			except:
+				continue
 
 			# If USN is valid and the marks-data is properly returned
 			if soup != None:
@@ -78,19 +94,46 @@ try:
 									subject_total_me[subscript].append(int(each_string[0]))
 						except:
 							pass
-					
+				
 						data_file.write(each.string.strip())
 						data_file.write(" ")
-					
+				
 					# Break from this loop (don't print) if the student has written subjects of Backlog.
 					elif each.string == "Semester:" and count > 9:
 						break
 
+				total_marks = text[-1].string.strip()
+				if int(total_marks) > 300:
+					total.append(total_marks)
 				data_file.write("\n")
 				soup = None
-
+			
 			else:
 				pass
+			
+		total.sort()
+		counter = collections.Counter(total)
+		freq = counter.values()
+		value = counter.keys()
+
+		frequency_trace = Histogram(
+							x = value,
+							y = freq,
+							name=branch_code
+						)
+		layout = Layout(
+					title=college_name+' 5th Sem '+branch_code+' Frequency of Total Marks',
+					xaxis=XAxis(
+	    				title='Total Marks',
+	    			),
+	    			yaxis = YAxis(
+	   			 		title='No. of Students with same marks',
+	  		  		)
+	    		)
+		frequency_data = Data([frequency_trace])
+		fig = Figure(data=frequency_data, layout=layout)
+
+		unique_url = py.plot(fig, filename = college_name+' 5th Sem '+branch_code+' Frequency of Total Marks') 
 
 	average_ise = []
 	average_cse = []
@@ -103,37 +146,44 @@ try:
 		average_me.append(sum(subject_total_me[no_subject])/len(subject_total_me[no_subject]))
 
 	total_trace_ise = Scatter(
-				x = ['10MAT31','10xx32','10xx33','10xx34','10xx35','10xx36','10xxL37','10xxL38'],
+				x = ['10xx51','10xx52','10xx53','10xx54','10xx55','10xx56','10xxL57','10xxL58'],
 				y = average_ise,
 				name='ISE'
 			)
 	total_trace_cse = Scatter(
-				x = ['10MAT31','10xx32','10xx33','10xx34','10xx35','10xx36','10xxL37','10xxL38'],
+				x = ['10xx51','10xx52','10xx53','10xx54','10xx55','10xx56','10xxL57','10xxL58'],
 				y = average_cse,
 				name='CSE'
 			)	
 	total_trace_ece = Scatter(
-				x = ['10MAT31','10xx32','10xx33','10xx34','10xx35','10xx36','10xxL37','10xxL38'],
+				x = ['10xx51','10xx52','10xx53','10xx54','10xx55','10xx56','10xxL57','10xxL58'],
 				y = average_ece,
 				name='ECE'
 			)
 	total_trace_me = Scatter(
-				x = ['10MAT31','10xx32','10xx33','10xx34','10xx35','10xx36','10xxL37','10xxL38'],
+				x = ['10xx51','10xx52','10xx53','10xx54','10xx55','10xx56','10xxL57','10xxL58'],
 				y = average_me,
 				name='MECH'
 			)
 	layout = Layout(
-    		xaxis=XAxis(
-        		title='Subject Codes',
-        		),
-        	yaxis = YAxis(
-        		title='Average Marks',
-        		)
-        	)
+			title=college_name + ' 5th Semester Average Marks',
+			xaxis=XAxis(
+	    		title='Subject Codes',
+	    		),
+	    	yaxis = YAxis(
+	    		title='Average Marks',
+	    		)
+	    	)
 	total_data = Data([total_trace_cse, total_trace_ise, total_trace_ece, total_trace_me])
 	fig = Figure(data=total_data, layout=layout)
 
-	unique_url = py.plot(fig, filename = 'PESIT-BSC-3rd-Sem-Average-Marks')
+	unique_url = py.plot(fig, filename = college_name + ' 5th Semester Average Marks')
+	end1=datetime.now()
+	print end1 - start1
 	
-except:
-	print "Please enter a valid USN query."
+end2=datetime.now()
+print end2 - start2
+
+#except:
+#	print "Please enter a valid USN query."""
+
